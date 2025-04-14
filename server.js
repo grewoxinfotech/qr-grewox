@@ -2,6 +2,7 @@ import express from 'express';
 import { initializeDatabase } from './database/db.js';
 import redirectRoutes from './routes/redirectRoutes.js';
 import dotenv from 'dotenv';
+import path from 'path';
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,11 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use('/dynamic', redirectRoutes);
+
+app.get('/download-qrcode', (req, res) => {
+  const filePath = path.join(new URL(import.meta.url).pathname, '..', 'controllers', 'qrcode.png');
+  res.download(filePath); // Automatically triggers a download
+});
 
 initializeDatabase()
   .then(() => {
